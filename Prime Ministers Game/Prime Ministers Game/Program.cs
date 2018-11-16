@@ -10,16 +10,24 @@ namespace Prime_Ministers_Game
     class Player
     {
         private int _score;
+        private bool _date_option;
 
         public Player()
         {
             _score = 0; // Default score
+            _date_option = false;
         }
 
         public int Score
         {
             get { return _score; }
-            set { _score += 1; } // So the program can just add one to the score.
+            set { _score = value; } // So the program can just add one to the score.
+        }
+
+        public bool DateOption
+        {
+            get { return _date_option; }
+            set { _date_option = value; }
         }
     }
 
@@ -43,14 +51,19 @@ namespace Prime_Ministers_Game
 
     class Game
     {
-        static void Main(string[] args)
+        public static void StartGame(List<PrimeMinister> pm, Player player)
+        {
+            // For randomising which prime ministers to pick
+            Random rn = new Random();
+        }
+
+        public static void Main(string[] args)
         {
             /* To get the information out of the .csv file.
              * Headers:
              * No   Prime Minister  Date of Birth   Start date of term  End date of term
              * The DoB of the PM is unimportant in the task so it will be skipped.
              */
-
             List<PrimeMinister> prime_ministers = new List<PrimeMinister>();
 
             using (StreamReader reader = new StreamReader(@"PrimeMinisters.csv"))
@@ -74,7 +87,8 @@ namespace Prime_Ministers_Game
                             ));
                     }
                 }
-
+                
+                /*
                 for (int i = 0; i < prime_ministers.Count; i++)
                 {
                     var a = prime_ministers[i];
@@ -84,11 +98,37 @@ namespace Prime_Ministers_Game
                     Console.WriteLine(@"{0}", a.EndDate);
                 }
                 Console.ReadKey();
+                */
             }
             
-            Player player = new Player();
-            player.Score = 0; // This is read as += 1 
-            Console.WriteLine(player.Score);
+            // The player class to be used.
+            var player = new Player();
+            var date_option = player.DateOption;
+
+        menu:
+            Console.WriteLine("Prime Minister Game");
+            Console.WriteLine("1) How to play");
+            if (date_option)
+                Console.WriteLine("2) Guess PM from date: ON");
+            else
+                Console.WriteLine("2) Guess PM from date: OFF");
+            Console.WriteLine("3) Start game");
+            Console.Write("Choose an option: ");
+            string menu_answer = Console.ReadLine();
+            int nma;
+            
+            try
+            {
+                nma = Convert.ToInt32(menu_answer);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("That is not a menu option.");
+                goto menu;
+            }
+
+            StartGame(prime_ministers, player);
+            
         }
     }
 }
