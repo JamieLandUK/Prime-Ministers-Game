@@ -383,27 +383,39 @@ namespace Prime_Ministers_Game
              * The No and DoB of the PM is unimportant in the task so it will be skipped.
              */
             List<PrimeMinister> prime_ministers = new List<PrimeMinister>();
-
-            using (StreamReader reader = new StreamReader(@"PrimeMinisters.csv"))
+            
+            try
             {
-                while (!reader.EndOfStream) // Until the end of the file.
+                using (StreamReader reader = new StreamReader(@"PrimeMinisters.csv"))
                 {
-                    var line = reader.ReadLine();
-                    var values = line.Split(',');
+                    while (!reader.EndOfStream) // Until the end of the file.
+                    {
+                        var line = reader.ReadLine();
+                        var values = line.Split(',');
 
-                    if (values[0] == "No")
-                    {
-                        continue; // First line has only headers.
-                    }
-                    else
-                    {
-                        prime_ministers.Add(new PrimeMinister(
-                            values[1], // Name
-                            values[3], // Start date of term
-                            values[4] // End date of term
-                            ));
+                        if (values[0] == "No")
+                        {
+                            continue; // First line has only headers.
+                        }
+                        else
+                        {
+                            prime_ministers.Add(new PrimeMinister(
+                                values[1], // Name
+                                values[3], // Start date of term
+                                values[4] // End date of term
+                                ));
+                        }
                     }
                 }
+            }
+            catch
+            {
+                Console.WriteLine("PrimeMinisters.csv has not been found.");
+                Console.WriteLine("Please put the .csv file in the same location as this .exe, " +
+                    "and then reload the program.");
+                Console.ReadKey();
+                Environment.Exit(1);
+            }
                 
                 // For testing if the file is working or not.
                 /*
@@ -416,10 +428,9 @@ namespace Prime_Ministers_Game
                 }
                 Console.ReadKey();
                 */
-            }
             
             // The player class to be used.
-            var player = new Player();
+            Player player = new Player();
             
             Menu(prime_ministers, player);
         }
