@@ -180,7 +180,8 @@ namespace Prime_Ministers_Game
             
         pre_loop:
             Console.WriteLine("Second section:");
-            Console.WriteLine("Which PM served during: {0}-{1}", mains[0].StartDate, mains[0].EndDate);
+            Console.WriteLine("Which PM served during: {0}-{1}", $"{mains[0].StartDate:dd/MM/yyyy}",
+                $"{mains[0].EndDate:dd/MM/yyyy}");
             Console.WriteLine();
             Console.WriteLine("Options:");
 
@@ -219,26 +220,29 @@ namespace Prime_Ministers_Game
             }
             
             Console.Write("Please type the name: ");
+            // Make sure that all names are in upper case.
             string answer = Console.ReadLine()?.ToUpper();
+            string first_name = mains[0].Name.ToUpper();
+            string second_name = mains[1].Name.ToUpper();
+            string third_name = mains[2].Name.ToUpper();
 
-            if (answer != mains[0].Name.ToUpper() || answer != mains[1].Name.ToUpper() || answer != mains[2].Name.ToUpper())
-            {
-                Console.WriteLine("That was not one of the options.");
-                Console.ReadKey();
-                Console.Clear();
-                goto pre_loop;
-            }
-            
-            if (answer == mains[0].Name.ToUpper())
+            if (answer == first_name)
             {
                 Console.WriteLine("Correct!");
                 player.Score++;
                 Console.ReadKey();
             }
-            else
+            else if (answer == second_name || answer == third_name)
             {
                 Console.WriteLine("Incorrect...");
                 Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine("That was not one of the options.");
+                Console.ReadKey();
+                Console.Clear();
+                goto pre_loop;
             }
 
         }
