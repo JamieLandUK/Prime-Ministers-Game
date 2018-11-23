@@ -100,6 +100,11 @@ namespace Prime_Ministers_Game
                 }
 
             pre_pm:
+                if (player.DateOption)
+                {
+                    Console.WriteLine("First section:");
+                }
+
                 Console.WriteLine("Prime Minister 1: {0}", p0.Name);
                 Console.WriteLine("Prime Minister 2: {0}", p1.Name);
                 Console.WriteLine("Prime Minister 3: {0}", p2.Name);
