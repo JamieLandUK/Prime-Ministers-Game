@@ -21,6 +21,8 @@ namespace Prime_Ministers_Game
             DateOption = false;
         }
 
+
+        // Automatic getters and setters.
         public int Score
         {
             get;
@@ -42,13 +44,18 @@ namespace Prime_Ministers_Game
         public DateTime StartDate { get; }
         public DateTime EndDate { get; }
 
+        // Set constructor, don't have to worry about a default since it's automatic.
         public PrimeMinister(string name, string sd, string ed)
         {
             Name = name;
+            // Important to set it to en-GB as the file is en-GB, but people might not have a computer set to that region code.
             StartDate = Convert.ToDateTime(sd, CultureInfo.GetCultureInfo("en-GB"));
+            // StartDate will never have text, like EndDate's "Incumbent"
+            // Incumbent as use for this program is the same as "today", since it needs to be a DateTime
             if (ed == "Incumbent")
             {
                 string temp = DateTime.Today.ToString();
+                // To format the string in British date format.
                 string temp2 = $"{temp:dd/MM/yyyy}";
                 EndDate = Convert.ToDateTime(temp2);
             }
@@ -66,7 +73,10 @@ namespace Prime_Ministers_Game
             // Game loop starting (5 rounds)
             for (var loop = 0; loop < 5; loop++)
             {
+                // Using a label so I can loop without incrementing loop.
+                // (In the case of an error or a user mistake)
             game_loop:
+                // Get all the random numbers we need to randomise prime ministers.
                 Random rn = new Random();
                 var rn_list = new List<int>();
                 
@@ -75,13 +85,17 @@ namespace Prime_Ministers_Game
                     rn_list.Add(rn.Next(0, pm.Count));
                 }
 
+                // Getting the three prime ministers from the random list for the first part.
                 PrimeMinister p0 = pm[rn_list[0]];
                 PrimeMinister p1 = pm[rn_list[1]];
                 PrimeMinister p2 = pm[rn_list[2]];
+                // For the second part if the user goes there.
                 PrimeMinister p3 = pm[rn_list[3]];
                 PrimeMinister p4 = pm[rn_list[4]];
                 PrimeMinister p5 = pm[rn_list[5]];
                 
+                // Only if they have the simple game
+                // Will only rerandomise if the FIRST three are the same.
                 if (p0.Name == p1.Name ||
                     p1.Name == p2.Name ||
                     p0.Name == p2.Name)
@@ -89,8 +103,10 @@ namespace Prime_Ministers_Game
                     goto game_loop;
                 }
                 
+                // If they have the special mode on.
                 if (player.DateOption)
                 {
+                    // If ANY of the names are the same.
                     if (p0.Name == p3.Name || p1.Name == p3.Name || p2.Name == p3.Name || p4.Name == p3.Name || p5.Name == p3.Name ||
                         p0.Name == p4.Name || p1.Name == p4.Name || p2.Name == p4.Name || p3.Name == p4.Name || p5.Name == p4.Name ||
                         p0.Name == p5.Name || p1.Name == p5.Name || p2.Name == p5.Name || p3.Name == p5.Name || p4.Name == p5.Name)
@@ -102,17 +118,23 @@ namespace Prime_Ministers_Game
             pre_pm:
                 if (player.DateOption)
                 {
+                    // To make sure the user know that they are in the special mode and what part they are at.
                     Console.WriteLine("First section:");
                 }
 
+                // Display their names.
                 Console.WriteLine("Prime Minister 1: {0}", p0.Name);
                 Console.WriteLine("Prime Minister 2: {0}", p1.Name);
                 Console.WriteLine("Prime Minister 3: {0}", p2.Name);
                 Console.Write("Which PM served first? ");
+                // Make sure that it's in Upper Case to deal with it.
+                // The ? stops that from being called if it's not a letter.
                 string game_answer = Console.ReadLine()?.ToUpper();
 
+                // They chose PM0.
                 if (game_answer == p0.Name.ToUpper())
                 {
+                    // If it is the earliest date out of the three.
                     if (p0.StartDate < p1.StartDate && p0.StartDate < p2.StartDate)
                     {
                         Console.WriteLine("Correct!");
@@ -125,6 +147,7 @@ namespace Prime_Ministers_Game
                         Console.ReadKey();
                     }
                 }
+                // They chose PM1.
                 else if (game_answer == p1.Name.ToUpper())
                 {
                     if (p1.StartDate < p0.StartDate && p1.StartDate < p2.StartDate)
@@ -139,6 +162,7 @@ namespace Prime_Ministers_Game
                         Console.ReadKey();
                     }
                 }
+                // They chose PM2.
                 else if (game_answer == p2.Name.ToUpper())
                 {
                     if (p2.StartDate < p0.StartDate && p2.StartDate < p1.StartDate)
@@ -153,11 +177,13 @@ namespace Prime_Ministers_Game
                         Console.ReadKey();
                     }
                 }
+                // They did not choose one of the possible answers.
                 else
                 {
                     Console.WriteLine();
                     Console.WriteLine("That is not one of the prime ministers on the list.");
                     Console.ReadKey();
+                    // Clear the screen and it reprints the question down with the same people.
                     Console.Clear();
                     goto pre_pm;
                 }
@@ -185,11 +211,14 @@ namespace Prime_Ministers_Game
             
         pre_loop:
             Console.WriteLine("Second section:");
+            // Display both days in the right format.
             Console.WriteLine("Which PM served during: {0}-{1}", $"{mains[0].StartDate:dd/MM/yyyy}",
                 $"{mains[0].EndDate:dd/MM/yyyy}");
             Console.WriteLine();
             Console.WriteLine("Options:");
 
+            // Randomly choose which sequence to display the names in
+            // So that the first prime minister isn't always the right answer.
             switch (rl)
             {
                 case 0: // 1 2 3
@@ -231,12 +260,14 @@ namespace Prime_Ministers_Game
             string second_name = mains[1].Name.ToUpper();
             string third_name = mains[2].Name.ToUpper();
 
+            // The first name is always the right answer.
             if (answer == first_name)
             {
                 Console.WriteLine("Correct!");
                 player.Score++;
                 Console.ReadKey();
             }
+            // If they still guessed one of the names, but got it wrong.
             else if (answer == second_name || answer == third_name)
             {
                 Console.WriteLine("Incorrect...");
@@ -254,9 +285,11 @@ namespace Prime_Ministers_Game
 
         public static void EndGame(List<PrimeMinister> pm, Player player)
         {
+            // The extended game is out of 10.
             if (player.DateOption)
             {
                 Console.WriteLine("Score: {0} out of 10.", player.Score);
+                // Superfluous messages of congratulation.
                 if (player.Score == 10)
                     Console.WriteLine("Perfect!!");
                 else if (player.Score > 7)
@@ -269,6 +302,7 @@ namespace Prime_Ministers_Game
                 Console.ReadKey();
                 Console.Clear();
             }
+            // The standard game is out of 5.
             else
             {
                 Console.WriteLine("Score: {0} out of 5.", player.Score);
@@ -389,6 +423,7 @@ namespace Prime_Ministers_Game
              */
             List<PrimeMinister> prime_ministers = new List<PrimeMinister>();
             
+            // Surrounded in a try to make sure that I don't get a FileNotFound error.
             try
             {
                 using (StreamReader reader = new StreamReader(@"PrimeMinisters.csv"))
