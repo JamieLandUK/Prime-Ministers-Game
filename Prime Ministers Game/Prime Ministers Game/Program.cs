@@ -434,6 +434,14 @@ namespace Prime_Ministers_Game
             {
                 using (StreamReader reader = new StreamReader(@"PrimeMinisters.csv"))
                 {
+                    // Make sure that the given file is actually the correct one.
+                    var test1 = reader.ReadLine();
+                    var test2 = test1.Split(',');
+                    if (test2[0] != "No")
+                    {
+                        Console.WriteLine("The .csv file is incorrect.");
+                    }
+                    
                     while (!reader.EndOfStream) // Until the end of the file.
                     {
                         var line = reader.ReadLine();
