@@ -79,10 +79,16 @@ namespace Prime_Ministers_Game
                 // Get all the random numbers we need to randomise prime ministers.
                 Random rn = new Random();
                 var rn_list = new List<int>();
-                
-                for (var i = 0; i < 6; i++)
+                try
                 {
-                    rn_list.Add(rn.Next(0, pm.Count));
+                    for (var i = 0; i < 6; i++)
+                    {
+                        rn_list.Add(rn.Next(0, pm.Count));
+                    }
+                }
+                catch
+                {
+                    goto game_loop;
                 }
 
                 // Getting the three prime ministers from the random list for the first part.
